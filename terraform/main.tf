@@ -1,9 +1,3 @@
-provider "google" {
-  project = "{{YOUR GCP PROJECT}}"
-  region  = "us-central1"
-  zone    = "us-central1-c"
-}
-
 # Notebook Environment
 resource "google_notebooks_environment" "environment" {
   name = "notebooks-environment"
