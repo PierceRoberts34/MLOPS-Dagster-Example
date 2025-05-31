@@ -4,15 +4,20 @@ provider "google" {
   zone        = var.zone
 }
 
-# Notebook Environment
-resource "google_notebooks_environment" "environment" {
-  name = "notebooks-environment"
-  location = "us-east1"  
-}
+# Jenkins on Google Kubernetes Engine
+resource "google_container_cluster" "jenkins_cd" {
+  name     = "jenkins-cd"
+  location = var.region
 
-# Tensorboard for Monitoring
-resource "google_vertex_ai_tensorboard" "default" {
-  display_name = "vertex-ai-tensorboard-sample-name"
-  region       = "us-east1"
+  initial_node_count = 2
+
+  node_config {
+    machine_type = "e2-standard-2"
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/source.read_write",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+  }
 }
 
