@@ -19,4 +19,3 @@ resource "google_container_cluster" "jenkins_cd" {
     ]
   }
 }
-
