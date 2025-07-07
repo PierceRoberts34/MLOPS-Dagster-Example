@@ -3,15 +3,15 @@ The constants file holds environment variables.
 """
 
 # Path to the data folder
-IOT_DATA_FILE_PATH = "data/raw/sensor_data.csv"
+IOT_DATA_FILE_PATH =
 
 # Path to the remote data
-REMOTE_DATA_PATH = '1LEYLFnyZiL2mruibhumcy5SySHtNwvm-/subject1.csv'
+REMOTE_DATA_PATH =
 # Path to the keyfile
-GDRIVE_KEY_FILE = "keys/keyfile.json"
+GDRIVE_KEY_FILE =
 
 # Checksums
-CHECKSUMS_FILE = "keys/checksum.json"
+CHECKSUMS_FILE =
 
 # Change between rows needed to trigger a new file download
-CHANGE_THRESHOLD = 0
+CHANGE_THRESHOLD =
