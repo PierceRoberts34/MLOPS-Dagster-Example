@@ -36,12 +36,12 @@ def iot_data_file() -> None:
     # Get the last copy of the data
     try:
        with open(constants.IOT_DATA_FILE_PATH) as f:
-        oldrow = pd.read_csv(f,usecols=['X','Y','Z']).tail(1)
+        oldrow = pd.read_csv(f,usecols=['X','Y','Z']).tail(1) # Read last row of local file
     except:
       download_iot_file()
     # Check remote data for changes
     with fs.open(constants.REMOTE_DATA_PATH) as f:
-       newrow = pd.read_csv(f,usecols=['X','Y','Z']).tail(1)
+       newrow = pd.read_csv(f,usecols=['X','Y','Z']).tail(1) # Read last row of remote file.
     distance = np.linalg.norm(newrow - oldrow) # We use the Euclidan Normal to check for significant changes.
     if (distance > constants.CHANGE_THRESHOLD): # The threshold value can be changed with the constants value
        download_iot_file()
