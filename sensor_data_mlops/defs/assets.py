@@ -42,8 +42,8 @@ def iot_data_file() -> None:
     # Check remote data for changes
     with fs.open(constants.REMOTE_DATA_PATH) as f:
        newrow = pd.read_csv(f,usecols=['X','Y','Z']).tail(1)
-    distance = np.linalg.norm(newrow - oldrow)
-    if (distance > constants.CHANGE_THRESHOLD):
+    distance = np.linalg.norm(newrow - oldrow) # We use the Euclidan Normal to check for significant changes.
+    if (distance > constants.CHANGE_THRESHOLD): # The threshold value can be changed with the constants value
        download_iot_file()
 
 @dg.asset(
