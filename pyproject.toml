@@ -1,3 +1,6 @@
+"""
+This file contains project dependencies
+"""
 [project]
 name = "sensor_data_mlops"
 requires-python = ">=3.9,<3.13"
@@ -6,8 +9,18 @@ dependencies = [
     "dagster==1.11.0",
     "dagster-webserver",
     "dagster-duckdb",
+    "dagster-postgres",
+    "tensorflow",
+    "transformers",
+    "datasets",
+    "scikit-learn",
+    "scipy",
     "pandas",
-    "pydrive2[fsspec]"
+    "fsspec",
+    "pydrive2",
+    "appdirs",
+    "funcy",
+    "tqdm"
 ]
 
 [dependency-groups]
