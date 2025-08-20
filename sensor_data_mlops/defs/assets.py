@@ -3,7 +3,6 @@ An asset is an object in persistent storage, such as a table, file, or persisted
 An asset definition is a description, in code, of an asset that should exist and how to produce and update that asset.
 The assets.py file contains all assets used in the project
 """
-
 import numpy as np
 import os
 import pandas as pd
@@ -12,6 +11,7 @@ import time
 import zipfile
 
 # Machine Learning Modules
+import mlflow
 import tensorflow as tf
 from tensorflow import keras
 from sklearn.utils import class_weight
@@ -21,6 +21,7 @@ from sensor_data_mlops.defs import constants
 from sensor_data_mlops.defs.filestorebucket import FileStoreBucket
 from sensor_data_mlops.defs import model
 from sensor_data_mlops.defs import utils
+
 import dagster as dg
 
 # Define the external asset
@@ -129,13 +130,15 @@ def create_train_val_test():
   return (TrainData, TrainLabel), (DevData, DevLabel), (TestData, TestLabel), class_weights
 
 
-@dg.asset(deps=["training_data","validation_data",  "test_data", "class_weights"])
-def trainModel(training_data, validation_data, test_data, class_weights):
-
+@dg.asset(deps=["training_data","validation_data", "class_weights"])
+def trainedModel(training_data, validation_data, class_weights):
+  mlflow.set_tracking_uri = constants.MLFLOW_URI
+  mlflow.set_experiment('sensor_data_transformer')
+  # Start the tracking server logging
+  mlflow.tensorflow.autolog()
   # Initialize needed components
   TrainData, TrainLabel = training_data
   DevData, DevLabel = validation_data
-  TestData, TestLabel = test_data, 
   class_weights = class_weights
   learningRate = constants.PARAMETERS["learningRate"]
   segment_size = constants.PARAMETERS["segment_size"]
@@ -181,12 +184,22 @@ def trainModel(training_data, validation_data, test_data, class_weights):
 
   model_classifier.save_weights(constants.TRAINWEIGHTS_FILEPATH)
   model_classifier.load_weights(constants.CHECKPOINT_FILEPATH)
-  _, accuracy = model_classifier.evaluate(TestData, TestLabel)
-  print(f"Test accuracy: {round(accuracy * 100, 2)}%")
+
+  # Save the model into the registry
+  model_info = mlflow.tensorflow.log_model(model_classifier, name="tensorflow_model")
+  return model_info.model_uri
+ 
+
+@dg.asset(deps=["trainedModel", "test_data"])
+def modelAccuracy(trainedModel, test_data):
+  # Load the test data to look for accuracy   
+  TestData, TestLabel = test_data, 
+  #Load your model for inference
+  loaded_model = mlflow.tensorflow.load_model(
+      trainedModel
+  )  # The 'model_uri' attribute is in the format 'models:/<model_id>'
+  _, accuracy = loaded_model.evaluate(TestData, TestLabel)
   yield dg.MaterializeResult(f"Test accuracy: {round(accuracy * 100, 2)}%")
-
-
-
 
 
 
