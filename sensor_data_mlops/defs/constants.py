@@ -69,3 +69,6 @@ PARAMETERS = {
 # Model Validation
 CHECKPOINT_FILEPATH = "data/evaluation/bestValcheckpoint.weights.h5"
 TRAINWEIGHTS_FILEPATH = "data/evaluation/bestTrain.weights.h5"
+
+# Tracking URI
+MLFLOW_URI = "http://127.0.0.1:5000"
