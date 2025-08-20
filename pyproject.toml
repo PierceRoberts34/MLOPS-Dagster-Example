@@ -1,6 +1,5 @@
-"""
-This file contains project dependencies
-"""
+# This file contains project dependencies
+
 [project]
 name = "sensor_data_mlops"
 requires-python = ">=3.9,<3.13"
@@ -42,6 +41,7 @@ root_module = "sensor_data_mlops"
 registry_modules = [
     "sensor_data_mlops.components.*",
 ]
+
 
 
 
